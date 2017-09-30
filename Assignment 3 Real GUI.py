@@ -9,6 +9,9 @@ my_password = "196ff4df"
 my_host = "studdb-mysql.fos.auckland.ac.nz"
 my_database = "stu_rwon253_COMPSCI_280_C_S2_2017"
 
+my_array = [['00','01','02'],
+            ['10','11','12'],
+            ['20','21','22']]
 
 def main():
     app = QApplication(sys.argv)
@@ -25,8 +28,10 @@ class MyWindow(QWidget):
         self.enterButton = QPushButton("Enter")
         self.textbox = QTextEdit()
         self.enterButton.clicked.connect(self.showdata)
-        #complete this
         
+        tablemodel = MyTableModel(my_array, self)
+        tableview = QTableView()
+        tableview.setModel(tablemodel)
         
         
         topLayout = QHBoxLayout()
@@ -34,6 +39,7 @@ class MyWindow(QWidget):
         topLayout.addWidget(self.titleEdit)
         topLayout.addWidget(self.enterButton)
         topLayout.addWidget(self.textbox)
+        topLayout.addWidget(tableview)
         #complete this
         
         layout = QGridLayout()
@@ -75,5 +81,31 @@ class MyWindow(QWidget):
 
         cursor.close()
         conn.close()
+
+class MyTableModel(QAbstractTableModel):
+    def __init__(self, datain, parent=None, *args):
+        QAbstractTableModel.__init__(self, parent, *args)
+        self.arraydata = datain
+        self.header_labels = ['1', '2', '3']
+
+    def rowCount(self, parent):
+        return len(self.arraydata)
+
+    def columnCount(self, parent):
+        return len(self.arraydata[0])
+
+    def data(self, index, role):
+        if not index.isValid():
+            return QVariant()
+        elif role != Qt.DisplayRole:
+            return QVariant()
+        return QVariant(self.arraydata[index.row()][index.column()])
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole and orientation == Qt.Horizontal:
+            return self.header_labels[section]
+        return QAbstractTableModel.headerData(self, section, orientation, role)
+    
+    
 if __name__ == "__main__":
     main()
