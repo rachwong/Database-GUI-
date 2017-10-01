@@ -32,7 +32,8 @@ class MyWindow(QWidget):
         tablemodel = MyTableModel(my_array, self)
         tableview = QTableView()
         tableview.setModel(tablemodel)
-        
+        tableview.clicked.connect(self.viewClicked)
+        tableview.setSelectionBehavior(QTableView.SelectRows)
         
         topLayout = QHBoxLayout()
         topLayout.addWidget(enterLabel)
@@ -48,6 +49,11 @@ class MyWindow(QWidget):
         #complete this
     
         self.setLayout(layout)
+
+    def viewClicked(self, clickedIndex):
+        row=clickedIndex.row()
+        model=clickedIndex.model()
+        
     def showdata(self):
         data = str(self.query())
         print(data)
